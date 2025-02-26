@@ -1,0 +1,43 @@
+const productService = require("../services/productService.js");
+
+const getProducts = (req, res) => {
+    res.json(productService.getProducts());
+};
+
+const getProductById = (req, res) => {
+    const id = parseInt(req.params.id);
+    const product = productService.getProductById(id);
+    if (!product) return res.status(404).json({ message: "Produto não encontrado" });
+    res.json(product);
+};
+
+const createProduct = (req, res) => {
+    try {
+        const newProduct = productService.createProduct(req.body);
+        res.status(201).json(newProduct);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+const updateProduct = (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const updatedProduct = productService.updateProduct(id, req.body);
+        res.json(updatedProduct);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+};
+
+const deleteProduct = (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const deletedProduct = productService.deleteProduct(id);
+        res.json({ message: "Produto deletado com sucesso", product: deletedProduct });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+};
+
+module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct };
